@@ -487,16 +487,17 @@ class FilterBottomSheet @JvmOverloads constructor(context: Context, attrs: Attri
         }
         val hasFilters = hasActiveFilters()
         if (tracked?.isActivated == true && trackers != null && trackers?.parent == null) {
-            binding.filterLayout.addView(trackers, filterItems.indexOf(tracked!!) + 2)
             filterItems.add(filterItems.indexOf(tracked!!) + 1, trackers!!)
+            reSortViews()
         } else if (tracked?.isActivated == false && trackers?.parent != null) {
             binding.filterLayout.removeView(trackers)
             trackers?.reset()
             FILTER_TRACKER = ""
             filterItems.remove(trackers!!)
+            reSortViews()
         }
         if (hasFilters && clearButton.parent == null) {
-            binding.filterLayout.addView(clearButton)
+            reSortViews()
         } else if (!hasFilters && clearButton.parent != null) {
             binding.filterLayout.removeView(clearButton)
         }
