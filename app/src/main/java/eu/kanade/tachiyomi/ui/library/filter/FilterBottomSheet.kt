@@ -188,15 +188,7 @@ class FilterBottomSheet @JvmOverloads constructor(context: Context, attrs: Attri
                 },
             )
 
-            if (binding.secondLayout.width + (binding.groupBy.width * 2) + 20.dpToPx < width) {
-                binding.secondLayout.removeView(binding.viewOptions)
-                binding.firstLayout.addView(binding.viewOptions)
-                binding.secondLayout.isVisible = false
-            } else if (binding.viewOptions.parent == binding.firstLayout) {
-                binding.firstLayout.removeView(binding.viewOptions)
-                binding.secondLayout.addView(binding.viewOptions)
-                binding.secondLayout.isVisible = true
-            }
+            // Remove logic moving viewOptions since we flattened it all in XML or removed it
         }
 
         createTags()
@@ -603,15 +595,16 @@ class FilterBottomSheet @JvmOverloads constructor(context: Context, attrs: Attri
 
     private fun reSortViews() {
         binding.filterLayout.removeAllViews()
+        binding.filterLayout.addView(binding.firstLayout)
         binding.filterLayout.addView(fullFilterButton)
+        if (filterItems.any { it.isActivated }) {
+            binding.filterLayout.addView(clearButton)
+        }
         filterItems.filter { it.isActivated }.forEach {
             binding.filterLayout.addView(it)
         }
         filterItems.filterNot { it.isActivated }.forEach {
             binding.filterLayout.addView(it)
-        }
-        if (filterItems.any { it.isActivated }) {
-            binding.filterLayout.addView(clearButton)
         }
         binding.filterScroll.scrollTo(0, 0)
     }
